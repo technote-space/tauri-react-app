@@ -1,0 +1,131 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:import/errors"
+    ],
+    "settings": {
+        "react": {
+            "version": "latest"
+        },
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".ts", ".tsx"]
+            }
+        }
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint",
+        "import",
+        "unused-imports"
+    ],
+    "rules": {
+        "camelcase": [
+            "error",
+            {
+                "properties": "always"
+            }
+        ],
+        "quotes": [
+            "error",
+            "single",
+            "avoid-escape"
+        ],
+        "key-spacing": [
+            "error",
+            {
+                "singleLine": {
+                    "beforeColon": false,
+                    "afterColon": true
+                },
+                "multiLine": {
+                    "beforeColon": false,
+                    "afterColon": true
+                }
+            }
+        ],
+        "eqeqeq": "error",
+        "block-scoped-var": "error",
+        "complexity": [
+            "error",
+            {
+                "maximum": 20
+            }
+        ],
+        "default-case": "error",
+        "dot-location": [
+            "error",
+            "property"
+        ],
+        "guard-for-in": "error",
+        "no-eval": "error",
+        "block-spacing": "error",
+        "brace-style": "error",
+        "comma-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "indent": [
+            "error",
+            2,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "space-before-function-paren": [
+            "error",
+            "never"
+        ],
+        "space-before-blocks": "error",
+        "prefer-const": "error",
+        "no-var": "error",
+        "arrow-body-style": "off",
+        "arrow-spacing": "error",
+        "strict": [
+            "error"
+        ],
+        "no-warning-comments": [
+            "warn",
+            {
+                "terms": [
+                    "todo",
+                    "fixme",
+                    "hack"
+                ],
+                "location": "anywhere"
+            }
+        ],
+        "semi": [
+            "error"
+        ],
+        "sort-imports": 0,
+        "import/order": [2, {
+            "groups": ["type", "builtin", "external", "internal", "parent", "sibling", "index", "object"],
+            "alphabetize": { "order": "asc", "caseInsensitive": true }
+        }],
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+            "error",
+            { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+        ]
+    }
+}
