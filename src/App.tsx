@@ -24,24 +24,27 @@ function App() {
       setNewUrl('');
     }
   }, [newUrl, setUrls, setNewUrl]);
-  const handleDelete        = (url: string) => {
-    return () => {
-      setCurrentLayout(prev => {
-        delete prev[url];
-        return prev;
-      });
-      setUrls(prev => prev.filter(_url => _url !== url));
-    };
-  };
 
   const [currentLayout, setCurrentLayout] = useState<Record<string, Layout>>({});
   const handleChangeLayout                = useCallback((layouts: Layout[]) => {
     setCurrentLayout(prev => Object.assign({}, ...Object.keys(prev).map((key, index) => ({ [key]: layouts[index] }))));
   }, [setCurrentLayout]);
 
+  const handleDelete = useMemo(() => Object.assign({}, ...urls.map(url => ({
+    [url]: () => {
+      setCurrentLayout(prev => {
+        delete prev[url];
+        return prev;
+      });
+      setUrls(prev => prev.filter(_url => _url !== url));
+    },
+  }))), [setCurrentLayout, setUrls]);
+
   const handleCopy = useCallback((e: MouseEvent<HTMLInputElement>) => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText((e.target as HTMLInputElement).value).then();
+      navigator.clipboard.writeText((e.target as HTMLInputElement).value)
+        .then(() => alert('コピーしました'))
+        .catch((error) => alert((error && error.message) || 'コピーに失敗しました'));
     }
   }, []);
 
@@ -104,7 +107,7 @@ function App() {
               className="delete-button"
               type="button"
               value="削除"
-              onClick={ handleDelete(url) }
+              onClick={ handleDelete[url] }
             />
           </div>) }
       </ResponsiveReactGridLayout>
