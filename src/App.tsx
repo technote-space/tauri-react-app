@@ -43,7 +43,6 @@ function App() {
   const handleCopy = useCallback((e: MouseEvent<HTMLInputElement>) => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText((e.target as HTMLInputElement).value)
-        .then(() => alert('コピーしました'))
         .catch((error) => alert((error && error.message) || 'コピーに失敗しました'));
     }
   }, []);
