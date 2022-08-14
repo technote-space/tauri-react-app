@@ -77,7 +77,7 @@ function App() {
           value={ newUrl }
           onChange={ handleInputNewUrl }
         />
-        <input type="button" value="追加" onClick={ handleClick }/>
+        <button onClick={ handleClick }>追加</button>
       </div>
       <ResponsiveReactGridLayout
         className="layout"
@@ -101,14 +101,12 @@ function App() {
               url={ url }
               controls={ true }
               width="auto"
-              height={ currentLayout[url]?.h * 300 - 66 }
+              height={ currentLayout[url]?.h * 300 - 72 }
             />
-            <input
+            <button
               className="delete-button"
-              type="button"
-              value="削除"
               onClick={ handleDelete[url] }
-            />
+            >削除</button>
           </div>) }
       </ResponsiveReactGridLayout>
     </div>
