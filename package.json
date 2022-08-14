@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "gh-pages": "tsc && vite build --base=/tauri-react-app/",
     "preview": "vite preview",
     "tauri": "tauri",
     "lint": "eslint 'src/**/*.ts[x]' --cache",
