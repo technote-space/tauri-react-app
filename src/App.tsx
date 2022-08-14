@@ -1,33 +1,113 @@
-import {useCallback, useState} from 'react';
+import {
+  ChangeEvent,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Layout, Responsive, WidthProvider } from 'react-grid-layout';
+import ReactPlayer from 'react-player';
 import './App.css';
-import reactLogo from './assets/react.svg';
+
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 function App() {
-  const [count, setCount] = useState(0);
-  const handleClick       = useCallback(() => setCount(count => count + 1), [setCount]);
+  const [urls, setUrls]     = useState<string[]>([]);
+  const [newUrl, setNewUrl] = useState('');
+  const handleInputNewUrl   = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setNewUrl(e.target.value);
+  }, [setNewUrl]);
+  const handleClick         = useCallback(() => {
+    if (newUrl) {
+      setUrls(prev => [...new Set([...prev, newUrl])]);
+      setNewUrl('');
+    }
+  }, [newUrl, setUrls, setNewUrl]);
+  const handleDelete        = (url: string) => {
+    return () => {
+      setCurrentLayout(prev => {
+        delete prev[url];
+        return prev;
+      });
+      setUrls(prev => prev.filter(_url => _url !== url));
+    };
+  };
+
+  const [currentLayout, setCurrentLayout] = useState<Record<string, Layout>>({});
+  const handleChangeLayout                = useCallback((layouts: Layout[]) => {
+    setCurrentLayout(prev => Object.assign({}, ...Object.keys(prev).map((key, index) => ({ [key]: layouts[index] }))));
+  }, [setCurrentLayout]);
+
+  const handleCopy = useCallback((e: MouseEvent<HTMLInputElement>) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText((e.target as HTMLInputElement).value).then();
+    }
+  }, []);
+
+  useEffect(() => {
+    setCurrentLayout(currentLayout => {
+      return Object.assign({}, ...urls.map(url => ({
+        [url]: currentLayout[url] ?? {
+          i: url,
+          x: 0,
+          y: 0,
+          w: 4,
+          h: 1,
+        } as Layout,
+      })));
+    });
+  }, [urls, setCurrentLayout]);
+
+  const layouts = useMemo(() => ({
+    lg: [
+      ...urls.filter(url => url in currentLayout).map(url => currentLayout[url]),
+    ],
+  }), [urls, currentLayout]);
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo"/>
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo"/>
-        </a>
+      <div className="input-area">
+        <input
+          className="input-new-url"
+          type="text"
+          value={ newUrl }
+          onChange={ handleInputNewUrl }
+        />
+        <input type="button" value="追加" onClick={ handleClick }/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={handleClick}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <ResponsiveReactGridLayout
+        className="layout"
+        rowHeight={ 290 }
+        margin={ [10, 10] }
+        layouts={ layouts }
+        cols={ { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 } }
+        measureBeforeMount={ false }
+        onLayoutChange={ handleChangeLayout }
+      >
+        { urls.map(url =>
+          <div className="card" key={ url }>
+            <input
+              className="input-url"
+              type="text"
+              value={ url }
+              readOnly
+              onClick={ handleCopy }
+            />
+            <ReactPlayer
+              url={ url }
+              controls={ true }
+              width="auto"
+              height={ currentLayout[url]?.h * 300 - 66 }
+            />
+            <input
+              className="delete-button"
+              type="button"
+              value="削除"
+              onClick={ handleDelete(url) }
+            />
+          </div>) }
+      </ResponsiveReactGridLayout>
     </div>
   );
 }
