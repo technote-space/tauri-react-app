@@ -38,7 +38,7 @@ function App() {
       });
       setUrls(prev => prev.filter(_url => _url !== url));
     },
-  }))), [setCurrentLayout, setUrls]);
+  }))), [urls, setCurrentLayout, setUrls]);
 
   const handleCopy = useCallback((e: MouseEvent<HTMLInputElement>) => {
     if (navigator.clipboard) {
